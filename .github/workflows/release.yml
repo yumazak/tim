@@ -21,29 +21,22 @@ jobs:
 
   build:
     needs: test
-    strategy:
-      matrix:
-        include:
-          - os: macos-13
-            target: x86_64-apple-darwin
-          - os: macos-14
-            target: aarch64-apple-darwin
-    runs-on: ${{ matrix.os }}
+    runs-on: macos-14
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
         with:
-          targets: ${{ matrix.target }}
+          targets: aarch64-apple-darwin
       - uses: Swatinem/rust-cache@v2
-      - run: cargo build --release --target ${{ matrix.target }}
+      - run: cargo build --release --target aarch64-apple-darwin
       - name: Package
         run: |
-          cd target/${{ matrix.target }}/release
-          tar czf ../../../tim-${{ matrix.target }}.tar.gz tim
+          cd target/aarch64-apple-darwin/release
+          tar czf ../../../tim-aarch64-apple-darwin.tar.gz tim
       - uses: actions/upload-artifact@v4
         with:
-          name: tim-${{ matrix.target }}
-          path: tim-${{ matrix.target }}.tar.gz
+          name: tim-aarch64-apple-darwin
+          path: tim-aarch64-apple-darwin.tar.gz
 
   release:
     needs: build
