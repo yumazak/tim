@@ -92,8 +92,7 @@ func TestIntegration_Dt_WithFlags(t *testing.T) {
 func buildBinary(t *testing.T) string {
 	t.Helper()
 	binary := t.TempDir() + "/tim"
-	cmd := exec.Command("go", "build", "-o", binary, "./cmd/tim")
-	cmd.Dir = "/Users/yumazak/dev/personal/tim"
+	cmd := exec.Command("go", "build", "-o", binary, ".")
 	if out, err := cmd.CombinedOutput(); err != nil {
 		t.Fatalf("build failed: %v\n%s", err, out)
 	}
