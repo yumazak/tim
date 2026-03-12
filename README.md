@@ -4,8 +4,14 @@ Timezone conversion CLI tool.
 
 ## Install
 
+```bash
+mise use -g github:yumazak/tim@latest
 ```
-cargo install --git https://github.com/yumazak/tim
+
+Or with go:
+
+```bash
+go install github.com/yumazak/tim/cmd/tim@latest
 ```
 
 Or download a binary from [Releases](https://github.com/yumazak/tim/releases).
@@ -35,7 +41,7 @@ printf "9\n12\n15\n" | tim h
 ```bash
 # Naive datetime (interpreted as --from timezone)
 tim dt 2024-01-15T09:00:00
-# 2024-01-15T00:00:00+00:00
+# 2024-01-15T00:00:00Z
 
 # With explicit timezones
 tim dt -f UTC -t Asia/Tokyo 2024-01-15T00:00:00
@@ -43,22 +49,13 @@ tim dt -f UTC -t Asia/Tokyo 2024-01-15T00:00:00
 
 # RFC3339 input (offset in input takes precedence over --from)
 tim dt 2024-01-15T09:00:00+09:00
-# 2024-01-15T00:00:00+00:00
+# 2024-01-15T00:00:00Z
 
 # Seconds can be omitted
 tim dt 2024-01-15T09:00
 
 # From stdin
 printf "2024-01-15T09:00:00\n2024-06-15T12:30:00\n" | tim dt
-```
-
-### `tz` — List all IANA time zones
-
-```bash
-tim tz
-# Africa/Abidjan
-# Africa/Accra
-# ...
 ```
 
 ### Options

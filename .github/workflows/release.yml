@@ -13,30 +13,32 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
-      - uses: Swatinem/rust-cache@v2
-      - run: cargo fmt --check
-      - run: cargo clippy --all-targets --all-features -- -D warnings
-      - run: cargo test
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - run: test -z "$(gofmt -l .)"
+      - run: go vet ./...
+      - run: go test ./...
 
   build:
     needs: test
     runs-on: macos-14
     steps:
       - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
+      - uses: actions/setup-go@v5
         with:
-          targets: aarch64-apple-darwin
-      - uses: Swatinem/rust-cache@v2
-      - run: cargo build --release --target aarch64-apple-darwin
+          go-version-file: go.mod
+      - name: Build
+        env:
+          GOOS: darwin
+          GOARCH: arm64
+        run: go build -o tim ./cmd/tim
       - name: Package
-        run: |
-          cd target/aarch64-apple-darwin/release
-          tar czf ../../../tim-aarch64-apple-darwin.tar.gz tim
+        run: tar czf tim-darwin-arm64.tar.gz tim
       - uses: actions/upload-artifact@v4
         with:
-          name: tim-aarch64-apple-darwin
-          path: tim-aarch64-apple-darwin.tar.gz
+          name: tim-darwin-arm64
+          path: tim-darwin-arm64.tar.gz
 
   release:
     needs: build
